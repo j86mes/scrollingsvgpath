@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<style>
+	body {
+	  height: 2000px;
+	  background: #f1f1f1;
+	}
+	
+	#lineOnlySVG {
+	  position: fixed;
+	  top: 15%;
+	  width: 500px;
+	  height: 250px;
+	  margin-left:-50px;
+	}
+	</style>
+	</head>
+	<body>
+
+		<h2>Scroll down this window to draw the arrows.</h2>
+		
+		
+<svg id="lineOnlySVG">
+  <path
+    id='arrow1'
+    stroke-width='4'
+    stroke-linecap='round'
+    fill='none' stroke='black'  
+    d='M50,50, 300,50'
+    data-startPercentage='0'
+    data-endPercentage='8'
+  />
+  <path
+    id='head1top'
+    stroke-width='4'
+    stroke-linecap='round'
+    fill='none' stroke='black'  
+    d='M300,50 L290,40'
+    data-startPercentage='8'
+    data-endPercentage='10'
+  />
+  <path
+    id='head1bottom'
+    stroke-width='4'
+    stroke-linecap='round'
+    fill='none' stroke='black'  
+    d='M300,50 L290,60'
+    data-startPercentage='8'
+    data-endPercentage='10'
+  />
+
+  <path
+    id='arrow2'
+    stroke-width='4'
+    stroke-linecap='round'
+    fill='none' stroke='black'  
+    d='M350,50 C430,50,430,140,350,140  L100,140'
+    data-startPercentage='10'
+    data-endPercentage='48'
+  />
+  <path
+    id='head2top'
+    stroke-width='4'
+    stroke-linecap='round'
+    fill='none' stroke='black'  
+    d='M100,140 L110,130'
+    data-startPercentage='48'
+    data-endPercentage='50'
+  />
+  <path
+    id='head2bottom'
+    stroke-width='4'
+    stroke-linecap='round'
+    fill='none' stroke='black'  
+    d='M100,140  L110,150'
+    data-startPercentage='48'
+    data-endPercentage='50'
+  />
+
+  <path
+    id='arrow3'
+    stroke-width='4'
+    stroke-linecap='round'
+    fill='none' stroke='black'  
+    d='M50,200, 180,200'
+    data-startPercentage='50'
+    data-endPercentage='98'
+  />
+  <path
+    id='head3top'
+    stroke-width='4'
+    stroke-linecap='round'
+    fill='none' stroke='black'  
+    d='M180,200 L170,190'
+    data-startPercentage='98'
+    data-endPercentage='100'
+  />
+  <path
+    id='head3bottom'
+    stroke-width='4'
+    stroke-linecap='round'
+    fill='none' stroke='black'  
+    d='M180,200 L170,210'
+    data-startPercentage='98'
+    data-endPercentage='100'
+  />
+</svg>
+
+<script>
+
+const allPaths = [...document.getElementById('lineOnlySVG').children];
+
+hidePath = (pathElement) => {
+	const length = pathElement.getTotalLength();
+	pathElement.style.strokeDasharray = length;
+	pathElement.style.strokeDashoffset = length;
+};
+allPaths.forEach(path => hidePath(path));
+
+const pathReveal = (currentScrollPercentage, pathElement, startPercentage, endPercentage) => {
+  const length = pathElement.getTotalLength();
+  const totalElementPercentage = endPercentage-startPercentage;
+  const amountIn = currentScrollPercentage - startPercentage;
+  let ratioToDraw = amountIn/totalElementPercentage;
+  ratioToDraw = Math.max(0, Math.min(ratioToDraw, 1));
+  const draw = length * ratioToDraw;
+  pathElement.style.strokeDashoffset = length - draw;
+}
+
+const imageScrollHandler = () => {
+  const scrollPercent = 100 * (document.body.scrollTop + document.documentElement.scrollTop) / (document.documentElement.scrollHeight - document.documentElement.clientHeight);
+  allPaths.forEach(path => pathReveal(scrollPercent, path, path.dataset.startpercentage, path.dataset.endpercentage));
+}
+window.addEventListener("scroll", imageScrollHandler);
+
+</script>
+
+</body>
+</html>
